@@ -32,6 +32,7 @@ export default function RootLayout({
       appearance={{ baseTheme: dark }}
       signInFallbackRedirectUrl="/"
       signUpFallbackRedirectUrl="/"
+      proxyUrl="https://driving-chipmunk-53.clerk.accounts.dev/__clerk"
     >
       <html lang="en">
         <body
