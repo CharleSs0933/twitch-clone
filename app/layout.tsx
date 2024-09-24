@@ -33,6 +33,9 @@ export default function RootLayout({
       signInFallbackRedirectUrl="/"
       signUpFallbackRedirectUrl="/"
       // proxyUrl="https://driving-chipmunk-53.clerk.accounts.dev/__clerk"
+      allowedRedirectOrigins={[
+        "https://driving-chipmunk-53.clerk.accounts.dev",
+      ]}
     >
       <html lang="en">
         <body
