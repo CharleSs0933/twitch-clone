@@ -9,7 +9,7 @@ import { useChatSidebar } from "@/store/use-chat-sidebar";
 export const ChatToggle = () => {
   const { collapsed, onExpand, onCollapse } = useChatSidebar((state) => state);
 
-  let Icon = collapsed ? ArrowLeftFromLine : ArrowRightFromLine;
+  const Icon = collapsed ? ArrowLeftFromLine : ArrowRightFromLine;
 
   const onToggle = () => {
     if (collapsed) {
