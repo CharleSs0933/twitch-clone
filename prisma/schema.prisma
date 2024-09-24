@@ -1,20 +1,104 @@
+// generator client {
+//   provider        = "prisma-client-js"
+//   previewFeatures = ["fullTextIndex", "fullTextSearch"]
+// }
+
+// datasource db {
+//   provider     = "mysql"
+//   url          = env("DATABASE_URL")
+//   relationMode = "prisma"
+// }
+
+// model User {
+//   id             String  @id @default(uuid())
+//   username       String  @unique
+//   imageUrl       String  @db.Text
+//   externalUserId String  @unique
+//   bio            String? @db.Text
+
+//   following  Follow[] @relation(name: "Following")
+//   followedBy Follow[] @relation(name: "FollowedBy")
+
+//   blocking  Block[] @relation(name: "Blocking")
+//   blockedBy Block[] @relation(name: "BlockedBy")
+
+//   stream Stream?
+
+//   createdAt DateTime @default(now())
+//   updatedAt DateTime @updatedAt
+// }
+
+// model Stream {
+//   id           String  @id @default(uuid())
+//   name         String  @db.Text
+//   thumbnailUrl String? @db.Text
+
+//   ingressId String? @unique
+//   serverUrl String? @db.Text
+//   streamKey String? @db.Text
+
+//   isLive              Boolean @default(false)
+//   isChatEnabled       Boolean @default(true)
+//   isChatDelayed       Boolean @default(false)
+//   isChatFollowersOnly Boolean @default(false)
+
+//   userId String @unique
+//   user   User   @relation(fields: [userId], references: [id], onDelete: Cascade)
+
+//   createdAt DateTime @default(now())
+//   updatedAt DateTime @updatedAt
+
+//   @@index([userId])
+//   @@index([ingressId])
+//   @@fulltext([name])
+// }
+
+// model Follow {
+//   id          String @id @default(uuid())
+//   followerId  String
+//   followingId String
+
+//   follower  User @relation(name: "Following", fields: [followerId], references: [id], onDelete: Cascade)
+//   following User @relation(name: "FollowedBy", fields: [followingId], references: [id], onDelete: Cascade)
+
+//   createdAt DateTime @default(now())
+//   updatedAt DateTime @updatedAt
+
+//   @@unique([followerId, followingId])
+//   @@index([followerId])
+//   @@index([followingId])
+// }
+
+// model Block {
+//   id        String @id @default(uuid())
+//   blockerId String
+//   blockedId String
+
+//   blocker User @relation(name: "Blocking", fields: [blockerId], references: [id], onDelete: Cascade)
+//   blocked User @relation(name: "BlockedBy", fields: [blockedId], references: [id], onDelete: Cascade)
+
+//   @@unique([blockedId, blockerId])
+//   @@index([blockedId])
+//   @@index([blockerId])
+// }
+
 generator client {
   provider        = "prisma-client-js"
   previewFeatures = ["fullTextIndex", "fullTextSearch"]
 }
 
 datasource db {
-  provider     = "mysql"
+  provider     = "mongodb"
   url          = env("DATABASE_URL")
   relationMode = "prisma"
 }
 
 model User {
-  id             String  @id @default(uuid())
+  id             String  @id @default(auto()) @map("_id") @db.ObjectId
   username       String  @unique
-  imageUrl       String  @db.Text
+  imageUrl       String
   externalUserId String  @unique
-  bio            String? @db.Text
+  bio            String?
 
   following  Follow[] @relation(name: "Following")
   followedBy Follow[] @relation(name: "FollowedBy")
@@ -29,34 +113,32 @@ model User {
 }
 
 model Stream {
-  id           String  @id @default(uuid())
-  name         String  @db.Text
-  thumbnailUrl String? @db.Text
+  id           String  @id @default(auto()) @map("_id") @db.ObjectId
+  name         String
+  thumbnailUrl String?
 
   ingressId String? @unique
-  serverUrl String? @db.Text
-  streamKey String? @db.Text
+  serverUrl String?
+  streamKey String?
 
   isLive              Boolean @default(false)
   isChatEnabled       Boolean @default(true)
   isChatDelayed       Boolean @default(false)
   isChatFollowersOnly Boolean @default(false)
 
-  userId String @unique
   user   User   @relation(fields: [userId], references: [id], onDelete: Cascade)
+  userId String @unique @db.ObjectId
 
   createdAt DateTime @default(now())
   updatedAt DateTime @updatedAt
 
-  @@index([userId])
-  @@index([ingressId])
   @@fulltext([name])
 }
 
 model Follow {
-  id          String @id @default(uuid())
-  followerId  String
-  followingId String
+  id          String @id @default(auto()) @map("_id") @db.ObjectId
+  followerId  String @db.ObjectId
+  followingId String @db.ObjectId
 
   follower  User @relation(name: "Following", fields: [followerId], references: [id], onDelete: Cascade)
   following User @relation(name: "FollowedBy", fields: [followingId], references: [id], onDelete: Cascade)
@@ -70,9 +152,9 @@ model Follow {
 }
 
 model Block {
-  id        String @id @default(uuid())
-  blockerId String
-  blockedId String
+  id        String @id @default(auto()) @map("_id") @db.ObjectId
+  blockerId String @db.ObjectId
+  blockedId String @db.ObjectId
 
   blocker User @relation(name: "Blocking", fields: [blockerId], references: [id], onDelete: Cascade)
   blocked User @relation(name: "BlockedBy", fields: [blockedId], references: [id], onDelete: Cascade)
